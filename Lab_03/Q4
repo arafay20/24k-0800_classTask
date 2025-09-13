@@ -1,0 +1,190 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node *next;
+
+    Node(int d) {
+        data = d;
+        next = nullptr;
+    }
+};
+
+class LinkedList {
+    Node *head;
+
+public:
+    LinkedList() {
+        head = nullptr;
+    }
+
+   
+    void add(int val) {
+        Node *n = new Node(val);
+        if (head == nullptr) {
+            head = n;
+            return;
+        }
+        Node *temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = n;
+    }
+
+   
+    void display() {
+        Node *temp = head;
+        while (temp != nullptr) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+
+
+    void sortList() {
+        if (head == nullptr) return;
+        Node *i, *j;
+        for (i = head; i->next != nullptr; i = i->next) {
+            for (j = i->next; j != nullptr; j = j->next) {
+                if (i->data > j->data) {
+                    swap(i->data, j->data);
+                }
+            }
+        }
+    }
+
+   
+    void concatenate(LinkedList &other) {
+        if (head == nullptr) {
+            head = other.head;
+            return;
+        }
+        Node *temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = other.head;
+    }
+
+    
+    void findMiddle() {
+        if (head == nullptr) {
+            cout << "List is empty" << endl;
+            return;
+        }
+        Node *slow = head;
+        Node *fast = head;
+        while (fast != nullptr && fast->next != nullptr) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        cout << "Middle element: " << slow->data << endl;
+    }
+
+    // 4. Remove duplicates (assuming sorted list)
+    void removeDuplicates() {
+        if (head == nullptr) return;
+        Node *temp = head;
+        while (temp->next != nullptr) {
+            if (temp->data == temp->next->data) {
+                Node *dup = temp->next;
+                temp->next = temp->next->next;
+                delete dup;
+            } else {
+                temp = temp->next;
+            }
+        }
+    }
+
+    
+    static LinkedList mergeSorted(LinkedList &l1, LinkedList &l2) {
+        LinkedList result;
+        Node *p1 = l1.head;
+        Node *p2 = l2.head;
+        Node dummy(0);
+        Node *tail = &dummy;
+
+        while (p1 != nullptr && p2 != nullptr) {
+            if (p1->data < p2->data) {
+                tail->next = new Node(p1->data);
+                p1 = p1->next;
+            } else {
+                tail->next = new Node(p2->data);
+                p2 = p2->next;
+            }
+            tail = tail->next;
+        }
+        while (p1 != nullptr) {
+            tail->next = new Node(p1->data);
+            p1 = p1->next;
+            tail = tail->next;
+        }
+        while (p2 != nullptr) {
+            tail->next = new Node(p2->data);
+            p2 = p2->next;
+            tail = tail->next;
+        }
+
+        result.head = dummy.next;
+        return result;
+    }
+};
+ 
+int main() {
+    LinkedList l1, l2;
+
+  
+    l1.add(4);
+    l1.add(2);
+    l1.add(5);
+    l1.add(1);
+
+    cout << "Original list 1: ";
+    l1.display();
+
+    
+    l1.sortList();
+    cout << "Sorted list 1: ";
+    l1.display();
+
+ 
+    l1.add(5);
+    l1.add(5);
+    cout << "With duplicates: ";
+    l1.display();
+    l1.sortList();
+    l1.removeDuplicates();
+    cout << "After removing duplicates: ";
+    l1.display();
+
+    
+    l1.findMiddle();
+
+   
+    l2.add(3);
+    l2.add(6);
+    l2.add(7);
+
+    cout << "List 2: ";
+    l2.display();
+
+    
+    l1.concatenate(l2);
+    cout << "After concatenation (l1 + l2): ";
+    l1.display();
+
+    
+    LinkedList a, b;
+    a.add(1); a.add(3); a.add(5);
+    b.add(2); b.add(4); b.add(6);
+
+    LinkedList merged = LinkedList::mergeSorted(a, b);
+    cout << "Merged sorted list: ";
+    merged.display();
+
+    return 0;
+}
