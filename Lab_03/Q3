@@ -1,0 +1,111 @@
+#include <iostream>
+using namespace std;
+
+
+class Node {
+public:
+    int compNo;
+    Node *next;
+    Node *prev;
+
+    Node(int no) {
+        compNo = no;
+        next = nullptr;
+        prev = nullptr;
+    }
+};
+
+class Train {
+    Node *head;
+
+public:
+    Train() {
+        head = nullptr;
+    }
+
+  
+    void addCompartment(int no) {
+        Node *n = new Node(no);
+        if (head == nullptr) {
+            head = n;
+        } else {
+            Node *temp = head;
+            while (temp->next != nullptr) {
+                temp = temp->next;
+            }
+            temp->next = n;
+            n->prev = temp;
+        }
+    }
+
+    
+    void removeFirst() {
+        if (head == nullptr) {
+            cout << "No compartments to remove." << endl;
+            return;
+        }
+        Node *temp = head;
+        head = head->next;
+        if (head != nullptr) {
+            head->prev = nullptr;
+        }
+        cout << "Removed compartment: " << temp->compNo << endl;
+        delete temp;
+    }
+
+    
+    bool searchCompartment(int no) {
+        Node *temp = head;
+        while (temp != nullptr) {
+            if (temp->compNo == no) {
+                return true;
+            }
+            temp = temp->next;
+        }
+        return false;
+    }
+
+  
+    void displayTrain() {
+        if (head == nullptr) {
+            cout << "Train has no compartments." << endl;
+            return;
+        }
+        cout << "Compartments in the train: ";
+        Node *temp = head;
+        while (temp != nullptr) {
+            cout << temp->compNo << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    Train t;
+
+    
+    t.addCompartment(101);
+    t.addCompartment(102);
+    t.addCompartment(103);
+    t.addCompartment(104);
+
+   
+    t.displayTrain();
+
+    
+    t.removeFirst();
+
+    
+    t.displayTrain();
+
+   
+    cout << "Searching for 103: ";
+    if (t.searchCompartment(103)) {
+        cout << "Found" << endl;
+    } else {
+        cout << "Not Found" << endl;
+    }
+
+    return 0;
+}
