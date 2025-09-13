@@ -1,0 +1,112 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:	
+    string data;
+    Node *next;
+
+    Node(string d) : data(d), next(nullptr) { }
+};
+
+class slist {
+    Node *head;
+
+public:
+    slist() : head(nullptr) { }
+
+    void addBook(string book) {
+        Node *n = new Node(book);
+        if (head == nullptr) {
+            head = n;
+            return;
+        }
+        Node *temp = head;
+        while (temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = n;
+    }
+
+    
+    void deleteFront() {
+        if (head == nullptr) {
+            cout << "Catalog is empty. Nothing to delete." << endl;
+            return;
+        }
+        Node *temp = head;
+        head = head->next;
+        cout << "Deleted book: " << temp->data << endl;
+        delete temp;
+    }
+
+    
+    bool searchByTitle(string title) {
+        Node *temp = head;
+        while (temp != nullptr) {
+            if (temp->data == title) {
+                return true;
+            }
+            temp = temp->next;
+        }
+        return false;
+    }
+
+    
+    string searchByPosition(int pos) {
+        Node *temp = head;
+        int index = 0;
+        while (temp != nullptr) {
+            if (index == pos) {
+                return temp->data;
+            }
+            temp = temp->next;
+            index++;
+        }
+        return "Invalid position!";
+    }
+
+    
+    void display() {
+        if (head == nullptr) {
+            cout << "Catalog is empty." << endl;
+            return;
+        }
+        Node *temp = head;
+        cout << "Library Catalog:" << endl;
+        while (temp != nullptr) {
+            cout << temp->data << endl;
+            temp = temp->next;
+        }
+    }
+};
+
+int main() {
+    slist catalog;
+
+   
+    catalog.addBook("Data Structures");
+    catalog.addBook("Operating Systems");
+    catalog.addBook("Computer Networks");
+    catalog.addBook("Database Systems");
+
+
+    catalog.display();
+
+   
+    catalog.deleteFront();
+
+  
+    cout << "\nAfter deletion:" << endl;
+    catalog.display();
+
+  
+    cout << "\nSearching for 'Operating Systems': ";
+    cout << (catalog.searchByTitle("Operating Systems") ? "Found" : "Not Found") << endl;
+
+  
+    cout << "Book at position 1: " << catalog.searchByPosition(1) << endl;
+    cout << "Book at position 5: " << catalog.searchByPosition(5) << endl;
+
+    return 0;
+}
