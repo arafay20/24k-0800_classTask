@@ -1,0 +1,106 @@
+#include<iostream>
+using namespace std;
+
+class Node {
+public:	
+    string data;
+    Node *next;
+
+    Node(string d) : data(d), next(nullptr) { }
+};
+
+class slist {
+    Node *head;
+
+public:
+    slist() : head(nullptr) { }
+		
+    void addbookatstart(string b) {
+        Node *n = new Node(b);
+        n->next = head;
+        head = n;
+    }
+		
+    void addatend(string book) {
+        Node *n = new Node(book);
+        if (head == nullptr) {
+            head = n;
+            return;
+        }
+        Node *temp = head;
+        while(temp->next != nullptr) {
+            temp = temp->next;
+        }
+        temp->next = n;
+    }
+		
+    void insertanywhere(string b, int pos) {
+        Node *n = new Node(b);
+        if (pos == 0) { // insert at start
+            n->next = head;
+            head = n;
+            return;
+        }
+        Node *prev = head;
+        Node *curr = head->next;
+        for(int i=1; i<pos && curr!=nullptr; i++) {
+            prev = curr;
+            curr = curr->next;
+        }
+        prev->next = n;
+        n->next = curr;
+    }
+		
+    bool searchbook(string b) {
+        Node *temp = head;
+        while(temp != nullptr) {
+            if(temp->data == b) {
+                return true;
+            }
+            temp = temp->next;
+        }
+        return false;
+    }
+		
+    void display() {
+        Node *temp = head;
+        cout << "Book list :" << endl;
+        while(temp != nullptr) {
+            cout << temp->data << endl;
+            temp = temp->next;
+        }
+    }
+};
+
+int main() {
+    slist books;
+
+   
+    books.addatend("Data Structures");
+    books.addatend("Operating Systems");
+    books.addatend("Computer Networks");
+    books.addatend("Database Systems");
+
+ 
+    books.addbookatstart("Artificial Intelligence");
+
+  
+    books.addatend("Machine Learning");
+
+ 
+    books.insertanywhere("Cyber Security", 2); 
+
+   
+    cout << "\nSearching for 'Database Systems'..." << endl;
+    if (books.searchbook("Database Systems")) {
+        cout << "Book found!" << endl;
+    } else {
+        cout << "Book not found!" << endl;
+    }
+
+   
+    cout << "\nFinal list of books:" << endl;
+    books.display();
+
+    return 0;
+}
