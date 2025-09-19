@@ -1,0 +1,135 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
+
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        cout << arr[i] << " ";
+    }
+    cout << endl;
+}
+
+
+int bubbleSort(int arr[], int n) {
+    int comparisons = 0;
+    int *copy = new int[n]; 
+    for (int i = 0; i < n; i++) copy[i] = arr[i];
+
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            comparisons++;
+            if (copy[j] > copy[j + 1]) {
+                swap(copy[j], copy[j + 1]);
+            }
+        }
+    }
+    cout << "Bubble Sort Result: ";
+    printArray(copy, n);
+    delete[] copy;
+    return comparisons;
+}
+
+
+int insertionSort(int arr[], int n) {
+    int comparisons = 0;
+    int *copy = new int[n];
+    for (int i = 0; i < n; i++) copy[i] = arr[i];
+
+    for (int i = 1; i < n; i++) {
+        int key = copy[i];
+        int j = i - 1;
+        while (j >= 0) {
+            comparisons++;
+            if (copy[j] > key) {
+                copy[j + 1] = copy[j];
+                j--;
+            } else {
+                break;
+            }
+        }
+        copy[j + 1] = key;
+    }
+    cout << "Insertion Sort Result: ";
+    printArray(copy, n);
+    delete[] copy;
+    return comparisons;
+}
+
+
+int selectionSort(int arr[], int n) {
+    int comparisons = 0;
+    int *copy = new int[n];
+    for (int i = 0; i < n; i++) copy[i] = arr[i];
+
+    for (int i = 0; i < n - 1; i++) {
+        int minIdx = i;
+        for (int j = i + 1; j < n; j++) {
+            comparisons++;
+            if (copy[j] < copy[minIdx]) {
+                minIdx = j;
+            }
+        }
+        swap(copy[i], copy[minIdx]);
+    }
+    cout << "Selection Sort Result: ";
+    printArray(copy, n);
+    delete[] copy;
+    return comparisons;
+}
+
+
+int shellSort(int arr[], int n) {
+    int comparisons = 0;
+    int *copy = new int[n];
+    for (int i = 0; i < n; i++) copy[i] = arr[i];
+
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            int temp = copy[i];
+            int j = i;
+            while (j >= gap) {
+                comparisons++;
+                if (copy[j - gap] > temp) {
+                    copy[j] = copy[j - gap];
+                    j -= gap;
+                } else {
+                    break;
+                }
+            }
+            copy[j] = temp;
+        }
+    }
+    cout << "Shell Sort Result: ";
+    printArray(copy, n);
+    delete[] copy;
+    return comparisons;
+}
+
+
+void generateRandomArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        arr[i] = rand() % 100 + 1;
+    }
+}
+
+int main() {
+    srand(time(0)); 
+    
+    int arr20[20];
+    generateRandomArray(arr20, 20);
+    cout << "Original Array: ";
+    printArray(arr20, 20);
+
+    cout << "Comparisons (Bubble Sort): " << bubbleSort(arr20, 20) << endl;
+    cout << "Comparisons (Insertion Sort): " << insertionSort(arr20, 20) << endl;
+    cout << "Comparisons (Selection Sort): " << selectionSort(arr20, 20) << endl;
+    cout << "Comparisons (Shell Sort): " << shellSort(arr20, 20) << endl;
+
+    int arr100[100]; 
+    generateRandomArray(arr100, 100);
+
+    
+    return 0;
+}
