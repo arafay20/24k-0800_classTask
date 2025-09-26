@@ -1,0 +1,46 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+
+void playTurn(int random_number, int current_player, int total_players) {
+    int guess;
+
+    cout << "Player " << current_player << ", enter your guess (1-100): ";
+    cin >> guess;
+
+    if (guess > random_number) {
+        cout << "Too high!" << endl;
+        
+        playTurn(random_number, current_player + 1, total_players);
+    }
+    else if (guess < random_number) {
+        cout << "Too low" << endl;
+        
+        playTurn(random_number, current_player + 1, total_players);
+    }else if(current_player == total_players){
+    	
+    	return; 
+	}
+    else {
+        cout << "Correct! Player " << current_player << " wins!" << endl;
+       
+    }
+}
+a
+int main() {
+    srand(time(nullptr));
+
+    int random_number = rand() % 100 + 1;
+    int total_players;
+
+    cout << "Enter the number of players: ";
+    cin >> total_players;
+
+    
+    playTurn(random_number, 1, total_players);
+
+    return 0;
+}
