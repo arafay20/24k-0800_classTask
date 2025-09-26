@@ -1,0 +1,39 @@
+#include<iostream> 
+using namespace std;
+int gensum(int x);
+
+int makesum(int x){
+	
+	static int y =0;
+	if(x/10 > 1 ){
+		
+		y = gensum(x);
+		cout  << " value :" << y << endl;
+		return y;
+	}
+}
+
+int gensum(int x){
+	
+	static int y = 0;
+	
+	if(x/10 > 1){
+		y += x%10;
+		cout << "y : " << y << endl;
+		gensum(x/10);
+	}
+//	y = y+x%10;
+	return y;
+}
+int main () {
+	
+	int x;
+	
+	cout << "enter a number : " << endl;
+	cin >> x;
+	
+	int sum = makesum(x);
+	
+	cout << "num : " << sum << endl;
+	return 0;
+}
