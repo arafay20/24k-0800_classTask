@@ -1,0 +1,81 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Runner {
+    string name;
+    int time;
+};
+
+
+void merge(Runner runners[], int left, int mid, int right) {
+    int n1 = mid - left + 1;
+    int n2 = right - mid;
+
+  
+    Runner* L = new Runner[n1];
+    Runner* R = new Runner[n2];
+
+    for (int i = 0; i < n1; i++)
+        L[i] = runners[left + i];
+    for (int j = 0; j < n2; j++)
+        R[j] = runners[mid + 1 + j];
+
+    int i = 0, j = 0, k = left;
+
+  
+    while (i < n1 && j < n2) {
+        if (L[i].time <= R[j].time)
+            runners[k++] = L[i++];
+        else
+            runners[k++] = R[j++];
+    }
+
+   
+    while (i < n1)
+        runners[k++] = L[i++];
+    while (j < n2)
+        runners[k++] = R[j++];
+
+  
+    delete[] L;
+    delete[] R;
+}
+
+
+void mergeSort(Runner runners[], int left, int right) {
+    if (left < right) {
+        int mid = (left + right) / 2;
+        mergeSort(runners, left, mid);
+        mergeSort(runners, mid + 1, right);
+        merge(runners, left, mid, right);
+       
+    }
+}
+
+int main() {
+    const int n = 10;	
+    Runner runners[n] = {
+        {"Rafay", 1320},
+        {"Talha", 1285},
+        {"Rameel", 1402},
+        {"Irfan", 1250},
+        {"Abdullah", 1330},
+        {"aazmeer", 1275},
+        {"yahya", 1360},
+        {"abeer", 1305},
+        {"hassan", 1240},
+        {"abdul", 1385}
+    };
+
+  
+    mergeSort(runners, 0, n - 1);
+
+   
+    cout << " Top 5 Fastest Runners:\n";
+    for (int i = 0; i < 5; i++) {
+        cout << i + 1 << ". " << runners[i].name << " - " << runners[i].time << " seconds\n";
+    }
+
+    return 0;
+}
