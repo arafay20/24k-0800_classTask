@@ -1,0 +1,111 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+class LinkedList {
+private:
+    Node* head;
+
+    Node* getTail(Node* cur) {
+        while (cur && cur->next) cur = cur->next;
+        return cur;
+    }
+
+    Node* partition(Node* headRef, Node* end, Node** newHead, Node** newEnd) {
+        Node* pivot = end;
+        Node* prev = nullptr;
+        Node* cur = headRef;
+        Node* tail = pivot;
+
+        while (cur != pivot) {
+            if (cur->data < pivot->data) {
+                if (*newHead == nullptr) *newHead = cur;
+                prev = cur;
+                cur = cur->next;
+            } else {
+                Node* nxt = cur->next;
+                if (prev) prev->next = nxt;
+                else headRef = nxt;
+                cur->next = nullptr;
+                tail->next = cur;
+                tail = cur;
+                cur = nxt;
+            }
+        }
+
+        if (*newHead == nullptr) *newHead = pivot;
+        *newEnd = tail;
+        return pivot;
+    }
+
+    Node* quickSortRecur(Node* headRef, Node* end) {
+        if (!headRef || headRef == end) return headRef;
+
+        Node* newHead = nullptr;
+        Node* newEnd = nullptr;
+
+        Node* pivot = partition(headRef, end, &newHead, &newEnd);
+
+        if (newHead != pivot) {
+            Node* tmp = newHead;
+            while (tmp->next != pivot) tmp = tmp->next;
+            tmp->next = nullptr;
+
+            newHead = quickSortRecur(newHead, tmp);
+
+            tmp = getTail(newHead);
+            tmp->next = pivot;
+        }
+
+        pivot->next = quickSortRecur(pivot->next, newEnd);
+        return newHead;
+    }
+
+public:
+    LinkedList() : head(nullptr) {}
+
+    void append(int val) {
+        Node* n = new Node(val);
+        if (!head) { head = n; return; }
+        Node* t = head;
+        while (t->next) t = t->next;
+        t->next = n;
+    }
+
+    void quickSort() {
+        head = quickSortRecur(head, getTail(head));
+    }
+
+    void printList() const {
+        Node* t = head;
+        while (t) {
+            cout << t->data;
+            if (t->next) cout << " ";
+            t = t->next;
+        }
+        cout << "\n";
+    }
+};
+
+int main() {
+    LinkedList list;
+    int arr[] = {10, 7, 8, 9, 1, 5, 3};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    for (int i = 0; i < n; ++i) list.append(arr[i]);
+
+    cout << "Original List: ";
+    list.printList();
+
+    list.quickSort();
+
+    cout << "Sorted List: ";
+    list.printList();
+
+    return 0;
+}
