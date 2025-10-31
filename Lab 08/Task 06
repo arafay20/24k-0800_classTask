@@ -1,0 +1,74 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int id;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(int id) {
+    Node* newNode = new Node;
+    newNode->id = id;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+Node* insert(Node* root, int id) {
+    if (root == nullptr)
+        return createNode(id);
+
+    if (id < root->id)
+        root->left = insert(root->left, id);
+    else if (id > root->id)
+        root->right = insert(root->right, id);
+
+    return root;
+}
+
+Node* findLCA(Node* root, int id1, int id2) {
+    if (root == nullptr)
+        return nullptr;
+
+    if (id1 < root->id && id2 < root->id)
+        return findLCA(root->left, id1, id2);
+    else if (id1 > root->id && id2 > root->id)
+        return findLCA(root->right, id1, id2);
+
+    return root;
+}
+
+void preorder(Node* root) {
+    if (root == nullptr)
+        return;
+    cout << root->id << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+int main() {
+    Node* root = nullptr;
+
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 70);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 60);
+    insert(root, 80);
+
+    cout << "Employee Hierarchy (Preorder): ";
+    preorder(root);
+    cout << endl;
+
+    int emp1 = 20, emp2 = 40;
+    Node* manager = findLCA(root, emp1, emp2);
+
+    if (manager != nullptr)
+        cout << "Closest Common Manager of Employee " << emp1 << " and Employee " << emp2 << " is: " << manager->id << endl;
+    else
+        cout << "No common manager found." << endl;
+
+    return 0;
+}
