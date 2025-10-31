@@ -1,0 +1,89 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int productID;
+    int quantity;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(int id, int qty) {
+    Node* newNode = new Node;
+    newNode->productID = id;
+    newNode->quantity = qty;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+Node* insert(Node* root, int id, int qty) {
+    if (root == nullptr)
+        return createNode(id, qty);
+
+    if (id < root->productID)
+        root->left = insert(root->left, id, qty);
+    else if (id > root->productID)
+        root->right = insert(root->right, id, qty);
+    else
+        root->quantity = qty;
+
+    return root;
+}
+
+Node* search(Node* root, int id) {
+    if (root == nullptr || root->productID == id)
+        return root;
+    if (id < root->productID)
+        return search(root->left, id);
+    else
+        return search(root->right, id);
+}
+
+void findMaxQuantity(Node* root, Node*& maxNode) {
+    if (root == nullptr)
+        return;
+    if (maxNode == nullptr || root->quantity > maxNode->quantity)
+        maxNode = root;
+    findMaxQuantity(root->left, maxNode);
+    findMaxQuantity(root->right, maxNode);
+}
+
+void inorder(Node* root) {
+    if (root == nullptr)
+        return;
+    inorder(root->left);
+    cout << "Product ID: " << root->productID << ", Quantity: " << root->quantity << endl;
+    inorder(root->right);
+}
+
+int main() {
+    Node* root = nullptr;
+
+    root = insert(root, 1001, 45);
+    root = insert(root, 1005, 60);
+    root = insert(root, 1003, 25);
+    root = insert(root, 1008, 80);
+    root = insert(root, 1002, 30);
+
+    cout << "All Products (Inorder Traversal):" << endl;
+    inorder(root);
+
+    cout << endl << "Searching for Product ID 1003:" << endl;
+    Node* found = search(root, 1003);
+    if (found)
+        cout << "Product Found - ID: " << found->productID << ", Quantity: " << found->quantity << endl;
+    else
+        cout << "Product not found." << endl;
+
+    Node* maxNode = nullptr;
+    findMaxQuantity(root, maxNode);
+    if (maxNode)
+        cout << endl << "Product with Highest Quantity: ID " << maxNode->productID << ", Quantity " << maxNode->quantity << endl;
+    else
+        cout << "No products available." << endl;
+
+    cout << endl << "Program complete." << endl;
+
+    return 0;
+}
