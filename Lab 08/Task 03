@@ -1,0 +1,55 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    string levelName;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(string name) {
+    Node* newNode = new Node;
+    newNode->levelName = name;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+bool isFull(Node* root) {
+    if (root == nullptr)
+        return true;
+    if (root->left == nullptr && root->right == nullptr)
+        return true;
+    if (root->left != nullptr && root->right != nullptr)
+        return isFull(root->left) && isFull(root->right);
+    return false;
+}
+
+void preorder(Node* root) {
+    if (root == nullptr)
+        return;
+    cout << root->levelName << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+int main() {
+    Node* root = createNode("Level 1");
+    root->left = createNode("Level 2A");
+    root->right = createNode("Level 2B");
+    root->left->left = createNode("Level 3A");
+    root->left->right = createNode("Level 3B");
+    root->right->left = createNode("Level 3C");
+    root->right->right = createNode("Level 3D");
+
+    cout << "Game Levels (Preorder Traversal):" << endl;
+    preorder(root);
+    cout << endl;
+
+    if (isFull(root))
+        cout << endl << "The game level tree is a Full Binary Tree." << endl;
+    else
+        cout << endl << "The game level tree is NOT a Full Binary Tree." << endl;
+
+    return 0;
+}
