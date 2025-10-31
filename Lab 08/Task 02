@@ -1,0 +1,86 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int clientData;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(int data) {
+    Node* newNode = new Node;
+    newNode->clientData = data;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+Node* insert(Node* root, int data) {
+    if (root == nullptr)
+        return createNode(data);
+
+    if (data < root->clientData)
+        root->left = insert(root->left, data);
+    else if (data > root->clientData)
+        root->right = insert(root->right, data);
+
+    return root;
+}
+
+int findTotalNodes(Node* root) {
+    if (root == nullptr)
+        return 0;
+    return 1 + findTotalNodes(root->left) + findTotalNodes(root->right);
+}
+
+int findTotalLeafs(Node* root) {
+    if (root == nullptr)
+        return 0;
+    if (root->left == nullptr && root->right == nullptr)
+        return 1;
+    return findTotalLeafs(root->left) + findTotalLeafs(root->right);
+}
+
+int findHeight(Node* root) {
+    if (root == nullptr)
+        return 0;
+
+    int leftHeight = findHeight(root->left);
+    int rightHeight = findHeight(root->right);
+
+    if (leftHeight > rightHeight)
+        return leftHeight + 1;
+    else
+        return rightHeight + 1;
+}
+
+void preorder(Node* root) {
+    if (root == nullptr)
+        return;
+    cout << root->clientData << "  ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+int main() {
+    Node* root = nullptr;
+
+
+    root = insert(root, 50);
+    root = insert(root, 30);
+    root = insert(root, 70);
+    root = insert(root, 20);
+    root = insert(root, 40);
+    root = insert(root, 80);
+
+    cout << endl << "Client Data in Preorder Traversal: ";
+    preorder(root);
+    cout << endl;
+
+    cout << endl << "Total number of nodes: " << findTotalNodes(root);
+    cout << endl << "Total number of leaf records: " << findTotalLeafs(root);
+    cout << endl << "Height of the data tree: " << findHeight(root);
+
+
+    return 0;
+}
