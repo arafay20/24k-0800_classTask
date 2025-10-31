@@ -1,0 +1,73 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int items;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(int value) {
+    Node* newNode = new Node;
+    newNode->items = value;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+int subtreeSum(Node* root) {
+    if (root == nullptr)
+        return 0;
+    return root->items + subtreeSum(root->left) + subtreeSum(root->right);
+}
+
+void preorder(Node* root) {
+    if (root == nullptr)
+        return;
+    cout << root->items << " ";
+    preorder(root->left);
+    preorder(root->right);
+}
+
+bool findSubtree(Node* root, int target) {
+    if (root == nullptr)
+        return false;
+
+    int sum = subtreeSum(root);
+    cout << "Checking subtree rooted at " << root->items << ", sum = " << sum << endl;
+
+    if (sum == target) {
+        cout << "Subtree found with sum " << target << ":" << endl;
+        preorder(root);
+        cout << endl;
+        return true;
+    }
+
+    bool foundLeft = findSubtree(root->left, target);
+    bool foundRight = findSubtree(root->right, target);
+
+    return foundLeft || foundRight;
+}
+
+int main() {
+    Node* root = createNode(10);
+    root->left = createNode(5);
+    root->right = createNode(15);
+    root->left->left = createNode(3);
+    root->left->right = createNode(7);
+    root->right->left = createNode(12);
+    root->right->right = createNode(20);
+
+    cout << "Warehouse Inventory (Preorder Traversal):" << endl;
+    preorder(root);
+    cout << endl;
+
+    int target;
+    cout << "Enter target sum to find: ";
+    cin >> target;
+
+    if (!findSubtree(root, target))
+        cout << "No subtree found with sum " << target << "." << endl;
+
+    return 0;
+}
