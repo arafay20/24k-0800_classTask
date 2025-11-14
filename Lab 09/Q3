@@ -1,0 +1,174 @@
+#include<iostream>
+
+using namespace std;
+
+class node {
+	public :
+		
+	int data;
+	node *left;
+	node *right;
+	int height;
+	
+	node(int d= 0): data(d), left(nullptr), right(nullptr), height(1){
+	}
+};
+
+node *newnode(int d){
+	
+	node *n = new node(d);
+	
+	return n;
+}
+
+
+class avl {
+	
+	node *head;
+	
+	public :
+		
+		
+		node *rightrotate(node *y){
+			
+			node *x =y->left;
+			node* t2 = x->right;
+			
+			x->right = y;
+			y->left = t2;
+			
+			y->height =  1 +  max(height(y->left), height(y->right));
+			x->height = 1 +  max(height(x->left), height(x->right));
+			
+			return x;
+		}
+		
+		node *leftrotate(node *y){
+			
+			node *x =y->right;
+			node* t2 = x->left;
+			
+			x->left = y;
+			y->right = t2;
+			
+			y->height =  1 +  max(height(y->left), height(y->right));
+			x->height = 1 +  max(height(x->left), height(x->right));
+			
+			return x;
+		}
+		
+		
+		
+		int max(int a, int b){
+			if(a > b){
+				return a;
+			}else 
+			return b;
+		}
+		
+		int height(node *n){
+			
+			if(n == nullptr){
+				return 0;
+			}
+			return n->height;
+		}
+		
+		int getbalance(node *head){
+			
+			if(head == nullptr){
+				
+				return 0;
+			}
+			return (height(head->left) - height(head->right));	
+		}
+		
+		
+		node *insert(node *head, int data){
+			
+			
+			if(head == nullptr){
+				
+				return (newnode(data));
+			}
+			
+			if(data < head->data){
+				head->left = insert(head->left, data);
+			}else if(data > head->data){
+				head->right = insert(head->right, data);
+				
+			}else 
+			return head;
+			
+			
+			
+			head->height = 1 + max(height(head->left), height(head->right));
+			
+			int balance =  getbalance(head);
+			
+			
+			
+			if(balance > 1 && data < head->left->data){
+				
+				return rightrotate(head);
+			}
+			
+			if(balance > 1 && data > head->left->data){
+				head->left = leftrotate(head->left);
+				return rightrotate(head);
+			}
+			
+			if(balance < -1 && data > head->right->data){
+				
+				return leftrotate(head);
+			}
+			
+			if(balance < -1 && data < head->right->data){
+				
+				head->right = rightrotate(head->right);
+				return leftrotate(head);
+			}
+			
+			return head;
+			
+		}
+		
+		
+		void inorder(node *root){
+			
+			if(root == nullptr){
+				return;
+			}
+			
+			inorder(root->left);
+			cout << root->data << ":" ;
+			cout << "BF-"  << getbalance(root) << " " ;
+			inorder(root->right);
+		}
+		
+		
+	
+	
+};
+int main (){
+	
+	avl a1;
+	node *root = nullptr; 
+	
+
+	root = a1.insert(root, 10);
+	root = a1.insert(root, 5);
+	root = a1.insert(root, 15);
+	root = a1.insert(root, 3);
+	root = a1.insert(root, 7); // after the 7th node is inserted the tree get unbalanced, which is a LR rotation, after performing the rotation the new root is 7
+	
+	
+	a1.inorder(root);
+	
+	
+	root = a1.insert(root, 12); // after the 12th node is inserted the tree get unbalanced, which is a RL rotation, so the tree is balanced through rotation
+	cout << endl;	
+	a1.inorder(root);
+	
+	return 0;
+}
