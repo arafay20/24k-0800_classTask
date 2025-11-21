@@ -1,0 +1,83 @@
+#include<iostream>
+
+using namespace std;
+
+class node {
+	public:
+		
+	string data;
+	node* next ;
+	
+	node(string d = "/0") : data(d), next(nullptr){
+	}
+};
+
+class hashlist {
+	
+	int bucket;
+	node** table;
+	
+	int hashfunction(string d) {
+		int sum  = 0;
+		for(int i = 0;i < d.length() ; i++){
+			int c = d[i];
+			sum+=(int)c;
+		}
+		
+		return (sum % bucket);
+	}
+	
+	public :
+	hashlist(int b) : bucket(b) {
+        table = new node*[bucket];     
+        for (int i = 0; i < bucket; i++)
+            table[i] = nullptr;          
+    }
+    
+    void insert(string d){
+    	
+    int index = hashfunction(d);
+    node* curr = new node(d);
+
+    if (table[index] == nullptr) {
+        table[index] = curr;
+        return;
+    }
+
+    node* temp = table[index];
+    while (temp->next != nullptr) {
+        temp = temp->next;
+    }
+
+    
+    temp->next = curr;
+	}
+	
+	void display() {
+        for (int i = 0; i < bucket; i++) {
+            cout << "Bucket " << i << ": ";
+
+            node* temp = table[i];
+            while (temp != nullptr) {
+                cout << temp->data << " -> ";
+                temp = temp->next;
+            }
+
+            cout << "NULL\n";
+        }
+    }
+};
+
+int main () {
+	hashlist ht(10);
+
+    ht.insert("hello");
+    ht.insert("abc");
+    ht.insert("cab");  
+    ht.insert("ollhe");
+    ht.insert("test");
+
+    ht.display();
+	return 0;
+	
+}
