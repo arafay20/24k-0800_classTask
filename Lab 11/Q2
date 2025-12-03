@@ -1,0 +1,89 @@
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+
+class dictionary {
+	
+	string table[100];
+	int size = 100;
+	
+	public :
+		dictionary(){
+			
+			for(int i = 0 ; i < 100 ; i++) {
+				
+				table[i] = "";
+			}
+		}
+		
+		int calculatehash(string val) {
+			
+			int num = 0;
+			for(int i = 0 ;i < val.length() ;i++){
+				
+				
+				num+= int(val[i]);
+				
+			}
+			
+			return num%100;
+		}
+		
+		void addrecord(){
+			
+			string val;
+			
+			cout << "enter the record to enter :" ;
+			cin >> val;
+			
+			int index = calculatehash(val);
+			
+			if(table[index] == ""){
+				table[index] = val;
+				
+			}else {
+				
+				cout << "value is already presented at index " << index << " computed by the hashfunction." << endl;
+			}
+			
+			
+		}
+		
+		void searchword(string val){
+			
+	    int index = calculatehash(val);
+        
+        if (table[index] == val) {
+            cout << "record found at index " << index << endl;
+        } 
+        else {
+            cout << "record not found" << endl;
+        }
+		}
+		
+		
+		void display() {
+			
+			for(int i = 0 ; i < 100 ; i++){
+				
+				cout << "record " << i+1 << " : " << table[i] << endl;
+			}
+		}
+};
+
+int main () {
+	
+	
+	dictionary d;
+	
+	d.addrecord();
+	d.addrecord();
+	
+	d.searchword("rafay");
+	d.display();
+	
+	
+	return 0;
+}
