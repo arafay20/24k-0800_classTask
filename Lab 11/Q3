@@ -1,0 +1,78 @@
+#include <iostream>
+using namespace std;
+
+class hashclass {
+    
+    int table[10];
+    
+public:
+    hashclass() {
+        for (int i = 0 ; i < 10 ; i++) {
+            table[i] = 0;  
+        }
+    }
+    
+    int calculatehash(int val) {
+        return val % 10;
+    }
+    
+    void add(int val) {
+        int index = calculatehash(val);
+        
+        if (table[index] == 0) {
+            table[index] = val;
+        }
+        else {
+            cout << "Value is already present at index " << index << " computed by the hash function." << endl;
+        }
+    }
+    
+    void search(int val) {
+        int index = calculatehash(val);
+        
+        if (table[index] == val) {
+            cout << val << " found " << endl;
+        } 
+        else {
+            cout << val << " not found" << endl;
+        }
+    }
+
+    void remove(int val) {
+        int index = calculatehash(val);
+
+        if (table[index] == val) {
+            table[index] = 0;
+            cout << val << " deleted" << endl;
+        } 
+        else {
+            cout << "record not found." << endl;
+        }
+    }
+    
+    void display() {
+        for (int i = 0 ; i < 10 ; i++) {
+            cout << table[i] << " " ;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    
+    hashclass d;  
+    
+    d.add(1);
+    d.add(3);
+    d.add(4);
+    d.add(5);
+    d.add(7);
+    d.display();
+    d.remove(4); 
+    
+    d.search(5);
+    d.search(6);  
+    
+     
+    return 0;
+}
