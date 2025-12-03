@@ -1,0 +1,95 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+struct Student {
+	
+        int rollNumber;
+        string name;
+		
+		};
+    
+class StudentHashTable {
+    int size = 15;
+    Student table[15];
+
+public:
+    StudentHashTable() {
+        for (int i = 0; i < size; i++) {
+            table[i].rollNumber = -1; 
+            table[i].name = "";
+        }
+    }
+
+    
+    int calculateHash(int rollNumber) {
+        return rollNumber % size;
+    }
+
+    void InsertRecord(int rollNumber, string name) {
+        int index = calculateHash(rollNumber);
+        int attempt = 0;
+        int newIndex = index;
+
+        while (table[newIndex].rollNumber != -1 && table[newIndex].rollNumber != rollNumber) {
+            attempt++;
+            if (attempt >= size) {
+                cout << "Hash table is full! Cannot insert record." << endl;
+                return;
+            }
+            newIndex = (index + attempt * attempt) % size;
+        }
+
+        table[newIndex].rollNumber = rollNumber;
+        table[newIndex].name = name;
+
+        cout << "Record inserted: " << name  << endl;
+    }
+
+    void SearchRecord(int rollNumber) {
+        int index = calculateHash(rollNumber);
+        int attempt = 0;
+        int newIndex = index;
+
+        while (table[newIndex].rollNumber != -1) {
+            if (table[newIndex].rollNumber == rollNumber) {
+                cout << "Record found: " << table[newIndex].name << endl;
+                return;
+            }
+            attempt++;
+            if (attempt >= size) {
+            	break;
+			}  
+            newIndex = (index + attempt * attempt) % size;
+        }
+
+        cout << "Record not found" << endl;
+    }
+
+    void Display() {
+        cout << " Student Hash Table" << endl;
+        for (int i = 0; i < size; i++) {
+            if (table[i].rollNumber != -1) {
+                cout << "Index " << i << ": " << table[i].rollNumber  << " - " << table[i].name << endl;
+            } else {
+                cout << "Index " << i << ": [empty]" << endl;
+            }
+        }
+    }
+};
+
+int main() {
+    StudentHashTable sht;
+
+    sht.InsertRecord(101, "Rafay");
+    sht.InsertRecord(102, "Talha");
+    sht.InsertRecord(116, "rameel");  
+
+    sht.SearchRecord(102);   
+    sht.SearchRecord(200);   
+
+    sht.Display();
+
+    return 0;
+}
