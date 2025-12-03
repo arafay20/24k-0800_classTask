@@ -1,0 +1,96 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class employee {
+
+    string table[50];
+    int size = 50;
+
+public:
+    employee() {
+        for (int i = 0; i < 50; i++) {
+            table[i] = "";
+        }
+    }
+
+    int calculatehash(string val) {
+        int num = 0;
+        for (int i = 0; i < val.length(); i++) {
+            num += int(val[i]);
+        }
+        return num % 50;
+    }
+    
+    int hash2(string val){
+    	
+    	int num = 0;
+    	for (int i = 0; i < val.length(); i++) {
+            num += int(val[i]);
+        }
+    	
+    	num =7-(num %7);
+    	return num; 
+	}
+
+    void addrecord() {
+        string val;
+        cout << "Enter the employee name to add: ";
+        cin >> val;
+        
+        int i =1;
+        int index = calculatehash(val);
+        
+        while(table[index] != ""){
+        	if(i >= size){
+        		cout << "database is full, cant add more records" << endl;
+        		return;
+			}
+			
+			index = (index + i*hash2(val)) % size;
+			i++;
+		}
+		
+		table[index] = val;
+		
+    }
+
+    void searchEmployee(string val) {
+    	
+    	int i = 0;
+    	int index = calculatehash(val) + i*hash2(val);
+    	
+    	while(table[index] != val){
+        	if(i >= size){
+        		cout << "employee not found in the directory" << endl;
+        		return;
+			}
+			i++;
+			index = (index + i*hash2(val)) %size;
+			
+		}
+		
+		cout << "emloyee found at index " << index+1 <<  endl;
+		
+		
+    }
+
+    void display() {
+        for (int i = 0; i < 50; i++) {
+            cout << "Record " << i + 1 << ": " << table[i] << endl;
+        }
+    }
+};
+
+int main() {
+    employee e;
+
+    e.addrecord();
+    e.addrecord();
+
+    e.searchEmployee("rafay");
+    e.display();
+
+    return 0;
+}
